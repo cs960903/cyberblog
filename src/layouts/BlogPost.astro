@@ -1,0 +1,39 @@
+---
+import BaseLayout from './BaseLayout.astro';
+
+export interface Props {
+  title: string;
+  description?: string;
+  pubDate: Date;
+  tags?: string[];
+}
+
+const { title, description, pubDate, tags = [] } = Astro.props;
+---
+
+<BaseLayout title={`${title} | CyberBlog`} description={description}>
+  <article class="blog-post">
+    <div class="container">
+      <header>
+        <h1>{title}</h1>
+        <div class="post-header-meta">
+          <time datetime={pubDate.toISOString()}>
+            {pubDate.toLocaleDateString('zh-CN', {
+              year: 'numeric', month: 'long', day: 'numeric'
+            })}
+          </time>
+          {tags.length > 0 && (
+            <>
+              <span class="divider"></span>
+              <span>{tags.join(' · ')}</span>
+            </>
+          )}
+        </div>
+      </header>
+      <div class="post-content">
+        <slot />
+      </div>
+      <slot name="comments" />
+    </div>
+  </article>
+</BaseLayout>

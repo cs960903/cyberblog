@@ -1,0 +1,50 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const { title = 'CyberBlog', description = 'A cyberpunk-themed personal blog' } = Astro.props;
+const base = import.meta.env.BASE_URL;
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href={`${base}/favicon.svg`} />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="description" content={description} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <title>{title}</title>
+  </head>
+  <body>
+    <div id="app-content">
+      <header>
+        <nav>
+          <a href={`${base}/`} class="logo">CYBERBLOG</a>
+          <div class="nav-links">
+            <a href={`${base}/`}>首页</a>
+            <a href={`${base}/blog`}>博客</a>
+            <a href="https://github.com/cs960903/cyberblog" target="_blank" rel="noopener">GitHub</a>
+          </div>
+        </nav>
+      </header>
+      <main>
+        <slot />
+      </main>
+      <footer class="site-footer">
+        <div class="social-links">
+          <a href="https://github.com/cs960903/cyberblog" target="_blank" rel="noopener">GitHub</a>
+          <a href={`${base}/rss.xml`}>RSS</a>
+        </div>
+        <p>© {new Date().getFullYear()} CyberBlog. Built with Astro.</p>
+      </footer>
+    </div>
+  </body>
+</html>

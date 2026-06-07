@@ -1,0 +1,48 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import BlogCard from '../components/BlogCard.astro';
+
+const allPosts = await getCollection('blog', ({ data }) => !data.draft);
+allPosts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+const latestPosts = allPosts.slice(0, 5);
+
+const base = import.meta.env.BASE_URL;
+---
+
+<BaseLayout title="CyberBlog" description="一个赛博朋克风格的个人技术博客">
+  <section class="hero">
+    <div class="hero-glow"></div>
+    <div class="container">
+      <h1 class="neon-text">CYBERBLOG</h1>
+      <p class="tagline">
+        记录技术、分享思考、探索未来。
+        <br/>在赛博空间留下属于你的数据碎片。
+      </p>
+    </div>
+  </section>
+
+  <section class="blog-list">
+    <div class="container">
+      <h2 class="blog-list-title neon-text">最新文章</h2>
+      {latestPosts.length > 0 ? (
+        latestPosts.map(post => (
+          <BlogCard
+            title={post.data.title}
+            description={post.data.description}
+            pubDate={post.data.pubDate}
+            tags={post.data.tags}
+            url={`${base}/blog/${post.id.replace(/\.md$/, '')}/`}
+          />
+        ))
+      ) : (
+        <p class="empty-state">暂无文章，敬请期待 ✨</p>
+      )}
+      {allPosts.length > 5 && (
+        <a href={`${base}/blog`} style="display: inline-block; margin-top: 1rem; color: var(--neon-cyan); font-family: 'JetBrains Mono', monospace; font-size: 0.9rem;">
+          查看全部文章 →
+        </a>
+      )}
+    </div>
+  </section>
+</BaseLayout>

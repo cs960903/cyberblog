@@ -1,0 +1,28 @@
+---
+import { getCollection, render } from 'astro:content';
+import BlogPost from '../../layouts/BlogPost.astro';
+import Giscus from '../../components/Giscus.astro';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog', ({ data }) => !data.draft);
+  return posts.map((post) => ({
+    params: { slug: post.id.replace(/\.md$/, '') },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+---
+
+<BlogPost
+  title={post.data.title}
+  description={post.data.description}
+  pubDate={post.data.pubDate}
+  tags={post.data.tags}
+>
+  <Content />
+  <div slot="comments" style="margin-top: 3rem; border-top: 1px solid var(--border-glow); padding-top: 2rem">
+    <Giscus />
+  </div>
+</BlogPost>
